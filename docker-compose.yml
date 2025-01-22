@@ -6,8 +6,24 @@ services:
       - "8888:8080"
     depends_on:
       - database
-      - cache 
-    database:
-      build: ./database
-    cache:
-      build: ./cache
+      - cache
+    environment:
+      DB_HOST: database
+      DB_NAME: myapp
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      CACHE_HOST: cache
+
+  database:
+    build: ./database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres  # Required for PostgreSQL initialization
+      #POSTGRES_DB: myapp           # Database name
+    ports:
+      - "5432:5432"                # Exposing PostgreSQL default port
+
+  cache:
+    build: ./cache
+    ports:
+      - "6379:6379"  # Exposing Redis default port
